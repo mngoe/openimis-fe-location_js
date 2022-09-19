@@ -32,24 +32,7 @@ class HealthFacilityPriceListsPanel extends FormPanel {
               </Grid>
             }
           />
-          <ControlledField
-            module="location"
-            id="HealthFacility.itemsPricelist"
-            field={
-              <Grid item xs={6} className={classes.item}>
-                <PublishedComponent
-                  pubRef="medical_pricelist.ItemsPriceListPicker"
-                  value={edited.itemsPricelist}
-                  nullLabel="empty"
-                  readOnly={readOnly}
-                  required={true}
-                  region={edited.parentLocation}
-                  district={edited.location}
-                  onChange={(v) => this.updateAttribute("itemsPricelist", v)}
-                />
-              </Grid>
-            }
-          />
+          
         </Grid>
       </Paper>
     );
