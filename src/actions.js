@@ -69,7 +69,7 @@ export function fetchHealthFacility(mm, healthFacilityUuid, healthFacilityCode) 
     "catchments{id, location{id, uuid, code, name}, catchment}",
     "validityFrom",
     "validityTo",
-    "programs {id idProgram nameProgram validityDate}"
+    "program {id idProgram nameProgram validityDate}"
   ];
   const payload = formatPageQuery("healthFacilities", filters, projections);
   return graphql(payload, "LOCATION_HEALTH_FACILITY");
