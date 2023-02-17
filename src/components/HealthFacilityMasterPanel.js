@@ -7,7 +7,9 @@ import {
   TextInput,
   TextAreaInput,
   withModulesManager,
+  formatMessage
 } from "@openimis/fe-core";
+import { injectIntl } from "react-intl";
 import { Grid } from "@material-ui/core";
 
 const styles = (theme) => ({
@@ -41,7 +43,7 @@ class HealthFacilityMasterPanel extends FormPanel {
   };
 
   render() {
-    const { classes, edited, reset, readOnly = false } = this.props;
+    const { intl, classes, edited, onEditedChanged, reset, readOnly = false } = this.props;
     return (
       <Grid container>
         <ControlledField
@@ -257,9 +259,28 @@ class HealthFacilityMasterPanel extends FormPanel {
             </Grid>
           }
         />
+        <ControlledField
+          module="location"
+          id="HealthFacility.program"
+          field={
+            <Grid item xs={4} className={classes.item}>
+              <PublishedComponent
+                pubRef="program.ProgramPicker"
+                name="program"
+                label={formatMessage(intl, "location", "programPicker.label")}
+                placeholder={formatMessage(intl, "location", "programPicker.placeholder")}
+                value={edited?.programs ?? []}
+                reset={reset}
+                multiple={true}
+                readOnly={readOnly}
+                onChange={(programs) => onEditedChanged({ ...edited, programs })}
+              />
+            </Grid>
+          }
+        />
       </Grid>
     );
   }
 }
 
-export default withModulesManager(withTheme(withStyles(styles)(HealthFacilityMasterPanel)));
+export default withModulesManager(injectIntl(withTheme(withStyles(styles)(HealthFacilityMasterPanel))));

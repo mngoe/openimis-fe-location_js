@@ -123,5 +123,7 @@
   "location.locationType.R": "Region",
   "location.locationType.D": "District",
   "location.locationType.W": "Municipality",
-  "location.locationType.V": "Village"
+  "location.locationType.V": "Village",
+  "location.programPicker.label": "Program(s)",
+  "location.programPicker.placeholder": "Select HealthFacility program(s)"
 }
