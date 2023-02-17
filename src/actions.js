@@ -230,7 +230,7 @@ function formatHealthFacilityGQL(hf) {
     ${!!hf.itemsPricelist ? `itemsPricelistId: ${decodeId(hf.itemsPricelist.id)}` : ""}
     ${!!hf.mutationExtensions ? `mutationExtensions: ${formatJsonField(hf.mutationExtensions)}` : ""}
     ${formatCatchments(hf.catchments)}
-    ${!!hf.programs ? `programs: [${hf.programs.map((p) => decodeId(p.id)+"\n")}]`:""}
+    ${!!hf.programs ? `program: [${hf.programs.map((p) => decodeId(p.id)+"\n")}]`:""}
   `;
 }
 
