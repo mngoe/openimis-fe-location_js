@@ -51,7 +51,11 @@ class HealthFacilityForm extends Component {
       !!this.props.healthFacility
     ) {
       this.setState((state, props) => ({
-        healthFacility: { ...props.healthFacility, parentLocation: props.healthFacility.location.parent },
+        healthFacility: {
+          ...props.healthFacility,
+          parentLocation: props.healthFacility.location.parent,
+          programs: props.healthFacility.program.edges
+        },
         healthFacility_uuid: props.healthFacility.uuid,
         lockNew: false,
         newHealthFacility: false,
