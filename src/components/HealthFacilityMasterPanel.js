@@ -45,7 +45,10 @@ class HealthFacilityMasterPanel extends FormPanel {
   render() {
     const { intl, classes, edited, onEditedChanged, reset, readOnly = false } = this.props;
 
-    edited.programs = edited.program?.edges?edited.program.edges:[];
+    if (edited.program) {
+      edited.programs = edited.program.edges;
+      console.log(edited);
+    }
 
     return (
       <Grid container>
