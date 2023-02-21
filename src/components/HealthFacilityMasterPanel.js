@@ -44,6 +44,9 @@ class HealthFacilityMasterPanel extends FormPanel {
 
   render() {
     const { intl, classes, edited, onEditedChanged, reset, readOnly = false } = this.props;
+
+    edited.programs = edited.program?.edges?edited.program.edges:[];
+
     return (
       <Grid container>
         <ControlledField
@@ -269,7 +272,7 @@ class HealthFacilityMasterPanel extends FormPanel {
                 name="program"
                 label={formatMessage(intl, "location", "programPicker.label")}
                 placeholder={formatMessage(intl, "location", "programPicker.placeholder")}
-                value={edited?.programs ?? []}
+                value={edited.programs}
                 reset={reset}
                 multiple={true}
                 readOnly={readOnly}
