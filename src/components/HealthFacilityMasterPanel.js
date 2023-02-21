@@ -272,7 +272,7 @@ class HealthFacilityMasterPanel extends FormPanel {
                 name="program"
                 label={formatMessage(intl, "location", "programPicker.label")}
                 placeholder={formatMessage(intl, "location", "programPicker.placeholder")}
-                value={edited.programs}
+                value={edited?.programs ?? []}
                 reset={reset}
                 multiple={true}
                 readOnly={readOnly}
