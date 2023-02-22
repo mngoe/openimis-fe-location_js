@@ -90,7 +90,6 @@ class HealthFacilityForm extends Component {
   };
 
   canSave = () => {
-    console.log(this.state.healthFacility);
     if (!this.state.healthFacility.code) return false;
     if (!this.state.healthFacility.name) return false;
     if (!this.state.healthFacility.location) return false;
