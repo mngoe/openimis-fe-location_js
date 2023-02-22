@@ -54,7 +54,7 @@ class HealthFacilityForm extends Component {
         healthFacility: {
           ...props.healthFacility,
           parentLocation: props.healthFacility.location.parent,
-          programs: props.healthFacility.program.edges
+          programs: props.healthFacility.program.edges.map((p) => p.node),
         },
         healthFacility_uuid: props.healthFacility.uuid,
         lockNew: false,
@@ -90,6 +90,7 @@ class HealthFacilityForm extends Component {
   };
 
   canSave = () => {
+    console.log(this.state.healthFacility);
     if (!this.state.healthFacility.code) return false;
     if (!this.state.healthFacility.name) return false;
     if (!this.state.healthFacility.location) return false;
