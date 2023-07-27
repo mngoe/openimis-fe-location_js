@@ -24,6 +24,7 @@ export const HEALTH_FACILITY_PICKER_PROJECTION = [
   "level",
   "servicesPricelist{id, uuid}",
   "itemsPricelist{id, uuid}",
+  "program{edges{node{idProgram nameProgram}}}",
   `location{${LOCATION_SUMMARY_PROJECTION.join(",")}, parent{${LOCATION_SUMMARY_PROJECTION.join(",")}}}`
 ];
 
