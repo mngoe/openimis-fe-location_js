@@ -284,6 +284,23 @@ class HealthFacilityMasterPanel extends FormPanel {
             </Grid>
           }
         />
+        <ControlledField
+          module="location"
+          id="HealthFacility.responsible"
+          field={
+            <Grid item xs={2} className={classes.item}>
+              <TextInput
+                module="location"
+                label="HealthFacilityForm.responsible"
+                name="responsible"
+                value={edited.responsible}
+                readOnly={readOnly}
+                required={true}
+                onChange={(v, s) => this.updateAttribute("responsible", v)}
+              />
+            </Grid>
+          }
+        />
       </Grid>
     );
   }

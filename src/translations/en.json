@@ -127,5 +127,6 @@
   "location.locationType.R": "Region",
   "location.locationType.D": "District",
   "location.locationType.W": "Municipality",
-  "location.locationType.V": "Village"
+  "location.locationType.V": "Village",
+  "HealthFacilityForm.responsible" : "Responsible"
 }

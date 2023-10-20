@@ -96,6 +96,7 @@ export function fetchHealthFacility(mm, healthFacilityUuid, healthFacilityCode) 
     "phone",
     "fax",
     "email",
+    "responsible",
     "legalForm{code}",
     "level",
     "subLevel{code}",
@@ -128,6 +129,7 @@ export function fetchHealthFacilitySummaries(filters) {
     "fax",
     "email",
     "level",
+    "responsible",
     "legalForm{code}",
     "location{code,name, parent{code, name}}",
     "validityFrom",
@@ -304,6 +306,7 @@ function formatHealthFacilityGQL(hf) {
     ${!!hf.phone ? `phone: "${formatGQLString(hf.phone)}"` : ""}
     ${!!hf.fax ? `fax: "${formatGQLString(hf.fax)}"` : ""}
     ${!!hf.email ? `email: "${formatGQLString(hf.email)}"` : ""}
+    ${!!hf.responsible ? `responsible: "${hf.responsible}"` : ""}
     ${!!hf.servicesPricelist ? `servicesPricelistId: ${decodeId(hf.servicesPricelist.id)}` : ""}
     ${!!hf.itemsPricelist ? `itemsPricelistId: ${decodeId(hf.itemsPricelist.id)}` : ""}
     ${!!hf.mutationExtensions ? `mutationExtensions: ${formatJsonField(hf.mutationExtensions)}` : ""}
