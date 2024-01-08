@@ -65,6 +65,7 @@ export function fetchHealthFacility(mm, healthFacilityUuid, healthFacilityCode) 
     "email",
     "legalForm{code}",
     "level",
+    "bankName",
     "subLevel{code}",
     "location{id, uuid, code, name, parent{id, uuid, code, name}}",
     "servicesPricelist{id, uuid, name}",
