@@ -1,4 +1,5 @@
 {
     "location.programPicker.label": "Programme(s)",
-    "location.programPicker.placeholder": "Selectionner le(s) programme(s) du Centre de santé"
+    "location.programPicker.placeholder": "Selectionner le(s) programme(s) du Centre de santé",
+    "location.HealthFacilityForm.bankName": "Nom de la banque "
 }

@@ -37,6 +37,8 @@ function healthFacilityFullPath(key, mm, id) {
   return graphql(payload, key);
 }
 
+
+
 export function fetchUserHealthFacilityFullPath(mm, id) {
   return healthFacilityFullPath("LOCATION_USER_HEALTH_FACILITY_FULL_PATH", mm, id);
 }
@@ -63,6 +65,7 @@ export function fetchHealthFacility(mm, healthFacilityUuid, healthFacilityCode) 
     "email",
     "legalForm{code}",
     "level",
+    "bankName",
     "subLevel{code}",
     "location{id, uuid, code, name, parent{id, uuid, code, name}}",
     "servicesPricelist{id, uuid, name}",
@@ -201,7 +204,7 @@ function formatCatchment(catchment) {
   return `{
     ${!!catchment.id ? `id: ${catchment.id}` : ""}
     locationId: ${decodeId(catchment.location.id)}
-    catchment: ${catchment.catchment}    
+    catchment: ${catchment.catchment}
   }`;
 }
 
@@ -222,6 +225,7 @@ function formatHealthFacilityGQL(hf) {
     level: "${hf.level}"
     legalFormId: "${hf.legalForm.code}"
     careType: "${hf.careType}"
+    bankName:"${hf.bankName}"
     ${!!hf.subLevel ? `subLevelId: "${hf.subLevel.code}"` : ""}
     ${!!hf.address ? `address: "${formatGQLString(hf.address)}"` : ""}
     ${!!hf.phone ? `phone: "${formatGQLString(hf.phone)}"` : ""}
