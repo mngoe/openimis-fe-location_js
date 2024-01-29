@@ -1,5 +1,16 @@
 {
     "location.programPicker.label": "Programme(s)",
     "location.programPicker.placeholder": "Selectionner le(s) programme(s) du Centre de santé",
-    "location.HealthFacilityForm.bankName": "Nom de la banque "
+    "location.HealthFacilityForm.bankName": "Nom de la banque ",
+    "location.HealthFacilityFullPath.region": "Région",
+    "location.HealthFacilityFullPath.district": "District",
+    "location.HealthFacilityFullPath.healthFacility": "ESA",
+    "location.RegionPicker.label": "Région",
+    "location.DistrictPicker.label": "District",
+    "location.HealthFacilityPicker.label": "Formation sanitaire",
+    "location.healthFacilityLevel": "Niveau de formation sanitaire",
+    "location.healthFacilityLevel.null": "tous",
+    "location.healthFacilityLevel.C": "Centre de santé",
+    "location.healthFacilityLevel.D": "Dispensaire",
+    "location.healthFacilityLevel.H": "Hôpital"
 }
