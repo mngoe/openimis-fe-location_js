@@ -286,23 +286,6 @@ class HealthFacilityMasterPanel extends FormPanel {
             </Grid>
           }
         />
-         <ControlledField
-          module="location"
-          id="HealthFacility.bankName"
-          field={
-            <Grid item xs={2} className={classes.item}>
-              <TextInput
-                module="location"
-                label="HealthFacilityForm.bankName"
-                name="bankName"
-                value={edited.bankName}
-                readOnly={readOnly}
-                required={true}
-                onChange={(v, s) => this.updateAttribute("bankName", v)}
-              />
-            </Grid>
-          }
-        />
       </Grid>
     );
   }

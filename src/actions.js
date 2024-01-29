@@ -65,7 +65,6 @@ export function fetchHealthFacility(mm, healthFacilityUuid, healthFacilityCode) 
     "email",
     "legalForm{code}",
     "level",
-    "bankName",
     "subLevel{code}",
     "location{id, uuid, code, name, parent{id, uuid, code, name}}",
     "servicesPricelist{id, uuid, name}",
@@ -225,7 +224,6 @@ function formatHealthFacilityGQL(hf) {
     level: "${hf.level}"
     legalFormId: "${hf.legalForm.code}"
     careType: "${hf.careType}"
-    bankName:"${hf.bankName}"
     ${!!hf.subLevel ? `subLevelId: "${hf.subLevel.code}"` : ""}
     ${!!hf.address ? `address: "${formatGQLString(hf.address)}"` : ""}
     ${!!hf.phone ? `phone: "${formatGQLString(hf.phone)}"` : ""}

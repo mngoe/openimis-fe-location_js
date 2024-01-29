@@ -97,7 +97,6 @@ class HealthFacilityForm extends Component {
     if (!this.state.healthFacility.level) return false;
     if (!this.state.healthFacility.careType) return false;
     if (!!this.accCodeMandatory && !this.state.healthFacility.accCode) return false;
-    if(!this.state.healthFacility.bankName) return false ;
     return true;
   };
 
