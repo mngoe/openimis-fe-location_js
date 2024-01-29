@@ -37,6 +37,8 @@ function healthFacilityFullPath(key, mm, id) {
   return graphql(payload, key);
 }
 
+
+
 export function fetchUserHealthFacilityFullPath(mm, id) {
   return healthFacilityFullPath("LOCATION_USER_HEALTH_FACILITY_FULL_PATH", mm, id);
 }
@@ -201,7 +203,7 @@ function formatCatchment(catchment) {
   return `{
     ${!!catchment.id ? `id: ${catchment.id}` : ""}
     locationId: ${decodeId(catchment.location.id)}
-    catchment: ${catchment.catchment}    
+    catchment: ${catchment.catchment}
   }`;
 }
 
