@@ -10,7 +10,5 @@
     "location.HealthFacilityPicker.label": "Formation sanitaire",
     "location.healthFacilityLevel": "Niveau de formation sanitaire",
     "location.healthFacilityLevel.null": "tous",
-    "location.healthFacilityLevel.C": "Centre de santé",
-    "location.healthFacilityLevel.D": "Dispensaire",
     "location.healthFacilityLevel.H": "Hôpital"
 }
