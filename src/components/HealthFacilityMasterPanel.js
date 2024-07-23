@@ -7,10 +7,13 @@ import {
   TextInput,
   TextAreaInput,
   withModulesManager,
-  formatMessage
+  formatMessage,
+  ValidatedTextInput,
 } from "@openimis/fe-core";
 import { injectIntl } from "react-intl";
 import { Grid } from "@material-ui/core";
+import { connect } from "react-redux";
+import { HFCodeValidationCheck, HFCodeValidationClear, HFCodeSetValid } from "../actions";
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -25,7 +28,9 @@ class HealthFacilityMasterPanel extends FormPanel {
     super(props);
     this.codeMaxLength = props.modulesManager.getConf("fe-location", "healthFacilityForm.codeMaxLength", 8);
     this.accCodeMaxLength = props.modulesManager.getConf("fe-location", "healthFacilityForm.accCodeMaxLength", 25);
-    this.accCodeMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.accCodeMandatory", true);
+    this.accCodeMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.accCodeMandatory", false);
+    this.isHealthFacilityStatusEnabled  = props.modulesManager.getConf("fe-location", "healthFacilityForm.isHealthFacilityStatusEnabled", false);
+    this.isHealthFacilityContractMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.isHealthFacilityContractMandatory", false);
   }
 
   updateRegion = (region) => {
@@ -49,9 +54,24 @@ class HealthFacilityMasterPanel extends FormPanel {
     });
   };
 
+  shouldValidate = (inputValue) => {
+    const { savedHFCode } = this.props;
+    const shouldValidate = inputValue !== savedHFCode;
+    return shouldValidate;
+  };
+
   render() {
-    const { intl, classes, edited, onEditedChanged, reset, readOnly = false } = this.props;
-    
+    const {
+      intl,
+      classes,
+      edited,
+      onEditedChanged,
+      reset,
+      readOnly = false,
+      isHFCodeValid,
+      isHFCodeValidating,
+      HFCodeValidationError,
+    } = this.props;
     return (
       <Grid container>
         <ControlledField
@@ -62,7 +82,7 @@ class HealthFacilityMasterPanel extends FormPanel {
               <PublishedComponent
                 pubRef="location.RegionPicker"
                 value={edited.parentLocation}
-                withNull={true}
+                withNull={false}
                 readOnly={readOnly}
                 onChange={(v, s) => this.updateRegion(v)}
               />
@@ -78,7 +98,8 @@ class HealthFacilityMasterPanel extends FormPanel {
                 pubRef="location.DistrictPicker"
                 value={edited.location}
                 readOnly={readOnly}
-                region={this.state.parentLocation}
+                region={edited.parentLocation}
+                withNull={false}
                 required={true}
                 onChange={(v, s) => this.updateDistrict(v)}
               />
@@ -93,9 +114,9 @@ class HealthFacilityMasterPanel extends FormPanel {
               <PublishedComponent
                 pubRef="location.HealthFacilityLegalFormPicker"
                 value={!!edited.legalForm ? edited.legalForm.code : null}
-                nullLabel="empty"
                 reset={reset}
                 readOnly={readOnly}
+                withNull={false}
                 required={true}
                 onChange={(v, s) => this.updateAttribute("legalForm", !!v ? { code: v } : null)}
               />
@@ -110,9 +131,9 @@ class HealthFacilityMasterPanel extends FormPanel {
               <PublishedComponent
                 pubRef="location.HealthFacilityLevelPicker"
                 value={edited.level}
-                nullLabel="empty"
                 reset={reset}
                 readOnly={readOnly}
+                withNull={false}
                 required={true}
                 onChange={(v, s) => this.updateAttribute("level", v)}
               />
@@ -127,8 +148,8 @@ class HealthFacilityMasterPanel extends FormPanel {
               <PublishedComponent
                 pubRef="location.HealthFacilitySubLevelPicker"
                 value={!!edited.subLevel ? edited.subLevel.code : null}
-                nullLabel="empty"
                 reset={reset}
+                withNull={false}
                 readOnly={readOnly}
                 onChange={(v, s) => this.updateAttribute("subLevel", !!v ? { code: v } : null)}
               />
@@ -143,9 +164,9 @@ class HealthFacilityMasterPanel extends FormPanel {
               <PublishedComponent
                 pubRef="medical.CareTypePicker"
                 value={edited.careType}
-                nullLabel="empty"
                 reset={reset}
                 readOnly={readOnly}
+                withNull={false}
                 required={true}
                 onChange={(v, s) => this.updateAttribute("careType", v)}
               />
@@ -157,14 +178,23 @@ class HealthFacilityMasterPanel extends FormPanel {
           id="HealthFacility.code"
           field={
             <Grid item xs={2} className={classes.item}>
-              <TextInput
+              <ValidatedTextInput
+                itemQueryIdentifier="healthFacilityCode"
+                shouldValidate={this.shouldValidate}
+                isValid={isHFCodeValid}
+                isValidating={isHFCodeValidating}
+                validationError={HFCodeValidationError}
+                action={HFCodeValidationCheck}
+                clearAction={HFCodeValidationClear}
+                setValidAction={HFCodeSetValid}
                 module="location"
-                label="HealthFacilityForm.code"
+                label="location.HealthFacilityForm.code"
+                codeTakenLabel="location.HealthFacilityForm.codeTaken"
                 name="code"
                 value={edited.code}
                 readOnly={readOnly}
                 required={true}
-                onChange={(v, s) => this.updateAttribute("code", v)}
+                onChange={(code, s) => this.updateAttribute("code", code)}
                 inputProps={{
                   "maxLength": this.codeMaxLength,
                 }}
@@ -237,6 +267,42 @@ class HealthFacilityMasterPanel extends FormPanel {
         />
         <ControlledField
           module="location"
+          id="HealthFacility.contractStartDate"
+          field={
+            <Grid item xs={2} className={classes.item}>
+              <PublishedComponent
+                pubRef="core.DatePicker"
+                value={edited.contractStartDate}
+                module="location"
+                label="HealthFacilityForm.contractStartDate"
+                reset={reset}
+                onChange={(date) => this.updateAttribute("contractStartDate", date)}
+                readOnly={readOnly}
+                required={this.isHealthFacilityContractMandatory}
+              />
+            </Grid>
+          }
+        />
+        <ControlledField
+          module="location"
+          id="HealthFacility.contractEndDate"
+          field={
+            <Grid item xs={2} className={classes.item}>
+              <PublishedComponent
+                pubRef="core.DatePicker"
+                value={edited.contractEndDate}
+                module="location"
+                label="HealthFacilityForm.contractEndDate"
+                reset={reset}
+                onChange={(date) => this.updateAttribute("contractEndDate", date)}
+                readOnly={readOnly}
+                required={this.isHealthFacilityContractMandatory}
+              />
+            </Grid>
+          }
+        />
+        <ControlledField
+          module="location"
           id="HealthFacility.fax"
           field={
             <Grid item xs={1} className={classes.item}>
@@ -251,6 +317,25 @@ class HealthFacilityMasterPanel extends FormPanel {
             </Grid>
           }
         />
+        {!!this.isHealthFacilityStatusEnabled && <ControlledField
+          module="location"
+          id="HealthFacility.status"
+          field={
+            <Grid item xs={1} className={classes.item}>
+              <PublishedComponent
+                pubRef="location.HealthFacilityStatusPicker"
+                value={edited.status}
+                module="location"
+                withNull={false}
+                label="HealthFacilityForm.status"
+                reset={reset}
+                onChange={(value) => this.updateAttribute("status", value)}
+                readOnly={readOnly}
+                required={true}
+              />
+            </Grid>
+          }
+        />}
         <ControlledField
           module="location"
           id="HealthFacility.email"
@@ -308,4 +393,11 @@ class HealthFacilityMasterPanel extends FormPanel {
   }
 }
 
-export default withModulesManager(injectIntl(withTheme(withStyles(styles)(HealthFacilityMasterPanel))));
+const mapStateToProps = (state) => ({
+  isHFCodeValid: state.loc.validationFields?.HFCode?.isValid,
+  isHFCodeValidating: state.loc.validationFields?.HFCode?.isValidating,
+  HFCodeValidationError: state.loc.validationFields?.HFCode?.validationError,
+  savedHFCode: state.loc?.healthFacility?.code,
+});
+
+export default withModulesManager(connect(mapStateToProps)(withTheme(withStyles(styles)(HealthFacilityMasterPanel))));
