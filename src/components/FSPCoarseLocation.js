@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import _debounce from "lodash/debounce";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import React, { Component } from "react";
 import _ from "lodash";
+
+import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
+
 import { ControlledField, PublishedComponent } from "@openimis/fe-core";
+import { locationLabel } from "../utils";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -19,7 +19,7 @@ const styles = (theme) => ({
   paperDivider: theme.paper.divider,
 });
 
-class CoarseLocation extends Component {
+class FSPCoarseLocation extends Component {
   state = {
     region: null,
     district: null,
@@ -52,50 +52,60 @@ class CoarseLocation extends Component {
     );
   };
 
-  onChangeDistrict = (d) => {
-    if (!!d) {
-      this.setState({ region: d.parent });
+  filterDistrict = (options, { inputValue }) => {
+    if (this.state.region) {
+      const filteredOptions = options.filter((district) => this.state.region?.uuid === district.parent.uuid);
+      return !!inputValue
+        ? filteredOptions.filter((option) => locationLabel(option).includes(inputValue))
+        : filteredOptions;
     }
-    this.props.onChange(d);
+
+    if (inputValue) {
+      return options.filter((option) => locationLabel(option).includes(inputValue));
+    } else return options;
+  };
+
+  onChangeDistrict = (district) => {
+    if (!!district) {
+      this.setState({ region: district.parent });
+    }
+    this.props.onChange(district);
   };
 
   render() {
-    const { classes, readOnly, required = false, filterLabels = true, allRegions } = this.props;
+    const { classes, readOnly, required = false } = this.props;
     const { region, district } = this.state;
     return (
       <Grid container className={classes.form}>
         <ControlledField
           module="location"
-          id={`CoarseLocation.location_0`}
+          id={`FSPCoarseLocation.location_0`}
           field={
             <Grid item xs={6} className={classes.item}>
               <PublishedComponent
-                pubRef="location.RegionPicker"
+                pubRef="location.FSPLocationPicker"
+                locationLevel={0}
+                value={region}
+                onChange={this.onChangeRegion}
                 readOnly={readOnly}
                 required={required}
-                value={region}
-                withNull={false}
-                filterLabels={filterLabels}
-                onChange={this.onChangeRegion}
-                allRegions={allRegions}
               />
             </Grid>
           }
         />
         <ControlledField
           module="location"
-          id={`CoarseLocation.location_1`}
+          id={`FSPCoarseLocation.location_1`}
           field={
             <Grid item xs={6} className={classes.item}>
               <PublishedComponent
-                pubRef="location.DistrictPicker"
+                pubRef="location.FSPLocationPicker"
+                locationLevel={1}
+                value={district}
+                onChange={this.onChangeDistrict}
+                filterOptions={this.filterDistrict}
                 readOnly={readOnly}
                 required={required}
-                value={district}
-                region={this.state.region}
-                withNull={false}
-                filterLabels={filterLabels}
-                onChange={this.onChangeDistrict}
               />
             </Grid>
           }
@@ -105,4 +115,4 @@ class CoarseLocation extends Component {
   }
 }
 
-export default withTheme(withStyles(styles)(CoarseLocation));
+export default withTheme(withStyles(styles)(FSPCoarseLocation));

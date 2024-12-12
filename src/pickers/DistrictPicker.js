@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { TextField } from "@material-ui/core";
-import { withModulesManager, formatMessage, AutoSuggestion } from "@openimis/fe-core";
 import _debounce from "lodash/debounce";
+import { withTheme, withStyles } from "@material-ui/core/styles";
+import { withModulesManager, formatMessage, AutoSuggestion } from "@openimis/fe-core";
+import { selectDistrictLocation, clearLocations } from "../actions.js";
 import { locationLabel } from "../utils";
 
 const styles = (theme) => ({
@@ -20,13 +21,17 @@ class DistrictPicker extends Component {
   }
 
   onSuggestionSelected = (v) => {
+    if (v && this.props.value !== v) this.props.selectDistrictLocation(v);
     this.props.onChange(v, locationLabel(v));
   };
+
+  componentWillUnmount() {
+    this.props.clearLocations(1);
+  }
 
   render() {
     const {
       intl,
-      classes,
       userHealthFacilityFullPath,
       reset,
       value,
@@ -41,18 +46,8 @@ class DistrictPicker extends Component {
       required = false,
     } = this.props;
 
-    if (!!userHealthFacilityFullPath) {
-      return (
-        <TextField
-          label={!!withLabel && (label || formatMessage(intl, "location", "DistrictPicker.label"))}
-          className={classes.textField}
-          disabled
-          value={locationLabel(userHealthFacilityFullPath.location)}
-        />
-      );
-    }
-
-    let items = districts || [];
+    let items = userHealthFacilityFullPath && [userHealthFacilityFullPath.location] || districts || [];
+    
     if (!!region) {
       items = items.filter((d) => {
         return d.parent.uuid === region.uuid;
@@ -90,4 +85,15 @@ const mapStateToProps = (state) => ({
   userHealthFacilityFullPath: state.loc.userHealthFacilityFullPath,
 });
 
-export default withModulesManager(connect(mapStateToProps)(injectIntl(withTheme(withStyles(styles)(DistrictPicker)))));
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      selectDistrictLocation,
+      clearLocations,
+    },
+    dispatch,
+  );
+
+export default withModulesManager(
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(DistrictPicker)))),
+);
