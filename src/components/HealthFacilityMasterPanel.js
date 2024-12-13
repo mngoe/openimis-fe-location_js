@@ -9,6 +9,7 @@ import {
   withModulesManager,
   formatMessage,
   ValidatedTextInput,
+  ValidatedTextInput,
 } from "@openimis/fe-core";
 import { injectIntl } from "react-intl";
 import { Grid } from "@material-ui/core";
@@ -28,6 +29,9 @@ class HealthFacilityMasterPanel extends FormPanel {
     super(props);
     this.codeMaxLength = props.modulesManager.getConf("fe-location", "healthFacilityForm.codeMaxLength", 8);
     this.accCodeMaxLength = props.modulesManager.getConf("fe-location", "healthFacilityForm.accCodeMaxLength", 25);
+    this.accCodeMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.accCodeMandatory", false);
+    this.isHealthFacilityStatusEnabled  = props.modulesManager.getConf("fe-location", "healthFacilityForm.isHealthFacilityStatusEnabled", false);
+    this.isHealthFacilityContractMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.isHealthFacilityContractMandatory", false);
     this.accCodeMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.accCodeMandatory", false);
     this.isHealthFacilityStatusEnabled  = props.modulesManager.getConf("fe-location", "healthFacilityForm.isHealthFacilityStatusEnabled", false);
     this.isHealthFacilityContractMandatory = props.modulesManager.getConf("fe-location", "healthFacilityForm.isHealthFacilityContractMandatory", false);
@@ -63,7 +67,8 @@ class HealthFacilityMasterPanel extends FormPanel {
   render() {
     const { intl,
       classes,
-      edited, onEditedChanged,
+      edited, 
+      onEditedChanged,
       reset,
       readOnly = false,
       isHFCodeValid,
