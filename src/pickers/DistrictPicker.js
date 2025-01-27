@@ -44,10 +44,11 @@ class DistrictPicker extends Component {
       districts,
       readOnly = false,
       required = false,
+      removeAllOption,
     } = this.props;
 
-    let items = userHealthFacilityFullPath && [userHealthFacilityFullPath.location] || districts || [];
-    
+    let items = (userHealthFacilityFullPath && [userHealthFacilityFullPath.location]) || districts || [];
+
     if (!!region) {
       items = items.filter((d) => {
         return d.parent.uuid === region.uuid;
@@ -69,11 +70,12 @@ class DistrictPicker extends Component {
         readOnly={readOnly}
         required={required}
         selectThreshold={this.selectThreshold}
-        withNull={withNull}
+        withNull={!removeAllOption && withNull}
         nullLabel={
-          nullLabel || filterLabels
+          (!removeAllOption || removeAllOption == false) &&
+          (nullLabel || filterLabels
             ? formatMessage(intl, "location", "location.DistrictPicker.null")
-            : formatMessage(intl, "location", "location.DistrictPicker.none")
+            : formatMessage(intl, "location", "location.DistrictPicker.none"))
         }
       />
     );
