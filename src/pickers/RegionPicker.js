@@ -55,6 +55,7 @@ class RegionPicker extends Component {
       readOnly = false,
       required = false,
       allRegions,
+      removeAllOption,
     } = this.props;
 
     allRegionsFlag = allRegions;
@@ -80,11 +81,13 @@ class RegionPicker extends Component {
         readOnly={readOnly}
         required={required}
         selectThreshold={this.selectThreshold}
-        withNull={withNull}
+        withNull={!removeAllOption && withNull}
         nullLabel={
-          nullLabel || filterLabels
+          (!removeAllOption || removeAllOption == false )&& (
+            ( nullLabel || filterLabels)
             ? formatMessage(intl, "location", "location.RegionPicker.null")
             : formatMessage(intl, "location", "location.RegionPicker.none")
+          ) 
         }
       />
     );
