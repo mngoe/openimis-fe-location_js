@@ -53,7 +53,7 @@ const HealthFacilityPicker = (props) => {
   );
 
   useEffect(() => {
-    if (multiple && autoComplete && !!district && data?.healthFacilities?.edges) {
+    if (multiple && autoComplete && !!district && value?.length === 0 && data?.healthFacilities?.edges) {
       onDataChange?.(data.healthFacilities.edges.map((edge) => edge.node));
     }
   }, [data]);
