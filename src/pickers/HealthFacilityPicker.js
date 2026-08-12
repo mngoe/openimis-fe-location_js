@@ -1,5 +1,5 @@
 import { healthFacilityLabel, LOCATION_SUMMARY_PROJECTION } from "../utils";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useModulesManager, useTranslations, Autocomplete, useGraphqlQuery } from "@openimis/fe-core";
 import _debounce from "lodash/debounce";
@@ -20,6 +20,8 @@ const HealthFacilityPicker = (props) => {
     region,
     district,
     level,
+    onDataChange,
+    autoComplete
   } = props;
 
   const modulesManager = useModulesManager();
@@ -49,6 +51,12 @@ const HealthFacilityPicker = (props) => {
     { level, region: region?.uuid, district: pickedDistrictsUuids, str: searchString },
     { skip: true },
   );
+
+  useEffect(() => {
+    if (multiple && autoComplete && !!district && value?.length === 0 && data?.healthFacilities?.edges) {
+      onDataChange?.(data.healthFacilities.edges.map((edge) => edge.node));
+    }
+  }, [data]);
 
   return (
     <Autocomplete
