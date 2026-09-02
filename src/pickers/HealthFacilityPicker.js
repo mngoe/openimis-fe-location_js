@@ -20,6 +20,7 @@ const HealthFacilityPicker = (props) => {
     region,
     district,
     level,
+    options,
     onDataChange,
     autoComplete
   } = props;
@@ -68,7 +69,7 @@ const HealthFacilityPicker = (props) => {
       withLabel={withLabel}
       withPlaceholder={withPlaceholder}
       readOnly={readOnly}
-      options={data?.healthFacilities?.edges.map((edge) => edge.node) ?? []}
+      options={options ?? data?.healthFacilities?.edges.map((edge) => edge.node) ?? []}
       isLoading={isLoading}
       value={value}
       getOptionLabel={healthFacilityLabel}
