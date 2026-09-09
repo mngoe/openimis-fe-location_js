@@ -8,6 +8,7 @@ import _debounce from "lodash/debounce";
 import { locationLabel } from "../utils";
 import { fetchLocationsStr, clearLocations, fetchParentLocationsStr } from "../actions";
 import _ from "lodash";
+
 const styles = () => ({
   textField: {
     width: "100%",
