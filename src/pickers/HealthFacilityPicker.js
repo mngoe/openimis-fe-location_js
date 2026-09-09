@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useModulesManager, useTranslations, Autocomplete, useGraphqlQuery } from "@openimis/fe-core";
 import _debounce from "lodash/debounce";
-
 const HealthFacilityPicker = (props) => {
   const {
     onChange,
@@ -20,6 +19,7 @@ const HealthFacilityPicker = (props) => {
     region,
     district,
     level,
+    options,
     onDataChange,
     autoComplete
   } = props;
@@ -68,7 +68,7 @@ const HealthFacilityPicker = (props) => {
       withLabel={withLabel}
       withPlaceholder={withPlaceholder}
       readOnly={readOnly}
-      options={data?.healthFacilities?.edges.map((edge) => edge.node) ?? []}
+      options={options ?? data?.healthFacilities?.edges.map((edge) => edge.node) ?? []}
       isLoading={isLoading}
       value={value}
       getOptionLabel={healthFacilityLabel}
