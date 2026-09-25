@@ -82,13 +82,14 @@ const LocationPicker = (props) => {
   }, [searchString, parentLocation, parentLocations]);
 
   useEffect(() => {
+    setSearchString("");
     if (open) {
       if (parentLocations) {
-        dispatch(fetchParentLocationsStr(modulesManager, locationLevel, parentLocations, searchString, 20));
+        dispatch(fetchParentLocationsStr(modulesManager, locationLevel, parentLocations, "", 20));
       } else {
         dispatch(fetchLocationsStr(
           modulesManager, locationLevel, regions?.[0]?.uuid,
-          districts?.[0]?.uuid, parentLocation, searchString,
+          districts?.[0]?.uuid, parentLocation, "",
         ));
       }
     } else {
