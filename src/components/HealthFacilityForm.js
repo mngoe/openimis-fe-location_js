@@ -126,7 +126,6 @@ class HealthFacilityForm extends Component {
     if (!this.state.healthFacility.careType) return false;
     if (this.state.healthFacility.validityTo) return false;
     if (!!this.accCodeMandatory && !this.state.healthFacility.accCode) return false;
-    if(!this.state.healthFacility.bankName) return false ;
     if (!!this.isHealthFacilityStatusEnabled & !this.state.healthFacility.status) return false;
     if (this.isHealthFacilityContractMandatory) {
       return !!this.state.healthFacility.contractStartDate && !!this.state.healthFacility.contractEndDate;

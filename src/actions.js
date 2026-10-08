@@ -61,7 +61,9 @@ export const HEALTH_FACILITY_PICKER_PROJECTION = [
   "servicesPricelist{id, uuid}",
   "itemsPricelist{id, uuid}",
   "program{edges{node{idProgram nameProgram}}}",
-  `location{${LOCATION_SUMMARY_PROJECTION.join(",")}, parent{${LOCATION_SUMMARY_PROJECTION.join(",")}}}`
+  "contractStartDate",
+  "contractEndDate",
+  `location{${LOCATION_SUMMARY_PROJECTION.join(",")}, parent{${LOCATION_SUMMARY_PROJECTION.join(",")}}}`,
 ];
 
 export const HEALTH_FACILITY_REFER_PICKER_PROJECTION = [
@@ -108,12 +110,14 @@ export function fetchHealthFacility(mm, healthFacilityUuid, healthFacilityCode) 
     "email",
     "legalForm{code}",
     "level",
-    "bankName",
     "subLevel{code}",
     "location{id, uuid, code, name, parent{id, uuid, code, name}}",
     "servicesPricelist{id, uuid, name}",
     "itemsPricelist{id, uuid, name}",
     "catchments{id, location{id, uuid, code, name}, catchment}",
+    "contractStartDate",
+    "contractEndDate",
+    "status",
     "validityFrom",
     "validityTo",
     "program { edges{ node{id idProgram nameProgram validityDateFrom}}}"
@@ -154,6 +158,7 @@ export function fetchLocations(levels, type, parent) {
   let filters = [
     `
     type: "${levels[type]}",
+    orderBy: "code"
   `,
   ];
   if (!!parent) {
@@ -309,7 +314,6 @@ function formatHealthFacilityGQL(hf) {
     level: "${hf.level}"
     legalFormId: "${hf.legalForm.code}"
     careType: "${hf.careType}"
-    bankName:"${hf.bankName}"
     ${!!hf.accCode ? `accCode: "${hf.accCode}"` : ""}
     ${!!hf.subLevel ? `subLevelId: "${hf.subLevel.code}"` : ""}
     ${!!hf.address ? `address: "${formatGQLString(hf.address)}"` : ""}
@@ -319,6 +323,9 @@ function formatHealthFacilityGQL(hf) {
     ${!!hf.servicesPricelist ? `servicesPricelistId: ${decodeId(hf.servicesPricelist.id)}` : ""}
     ${!!hf.itemsPricelist ? `itemsPricelistId: ${decodeId(hf.itemsPricelist.id)}` : ""}
     ${!!hf.mutationExtensions ? `mutationExtensions: ${formatJsonField(hf.mutationExtensions)}` : ""}
+    ${!!hf.contractStartDate ? `contractStartDate: "${hf.contractStartDate}"` : ""}
+    ${!!hf.contractEndDate ? `contractEndDate: "${hf.contractEndDate}"` : ""}
+    ${!!hf.status ? `status: "${hf.status}"` : ""}
     ${formatCatchments(hf.catchments)}
     ${!!hf.programs ? `program: [${hf.programs.map((p) => decodeId(p.id)+"\n")}]`:""}
   `;

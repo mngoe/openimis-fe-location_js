@@ -61,17 +61,16 @@ class HealthFacilityMasterPanel extends FormPanel {
   };
 
   render() {
-    const {
-      intl,
+    const { intl,
       classes,
-      edited,
-      onEditedChanged,
+      edited, onEditedChanged,
       reset,
       readOnly = false,
       isHFCodeValid,
       isHFCodeValidating,
       HFCodeValidationError,
     } = this.props;
+    
     return (
       <Grid container>
         <ControlledField
@@ -371,23 +370,6 @@ class HealthFacilityMasterPanel extends FormPanel {
             </Grid>
           }
         />
-         <ControlledField
-          module="location"
-          id="HealthFacility.bankName"
-          field={
-            <Grid item xs={2} className={classes.item}>
-              <TextInput
-                module="location"
-                label="HealthFacilityForm.bankName"
-                name="bankName"
-                value={edited.bankName}
-                readOnly={readOnly}
-                required={true}
-                onChange={(v, s) => this.updateAttribute("bankName", v)}
-              />
-            </Grid>
-          }
-        />
       </Grid>
     );
   }
@@ -400,4 +382,4 @@ const mapStateToProps = (state) => ({
   savedHFCode: state.loc?.healthFacility?.code,
 });
 
-export default withModulesManager(connect(mapStateToProps)(withTheme(withStyles(styles)(HealthFacilityMasterPanel))));
+export default withModulesManager(injectIntl(connect(mapStateToProps)(withTheme(withStyles(styles)(HealthFacilityMasterPanel)))));
