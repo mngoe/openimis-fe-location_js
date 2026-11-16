@@ -50,7 +50,8 @@ const LocationPicker = (props) => {
 
   const dispatch = useDispatch();
   const handleChange = (__, value) => {
-    onChange(value, locationLabel(value));
+    const normalizedValue = multiple ? (Array.isArray(value) ? value : []) : value;
+    onChange(normalizedValue, locationLabel(normalizedValue));
     if (!multiple) setOpen(false);
   };
 
@@ -61,13 +62,14 @@ const LocationPicker = (props) => {
   }, []);
 
   useEffect(() => {
+    const safeSearchString = searchString ?? "";
     if (
       open &&
       !isLoading &&
-      searchString.length >= modulesManager.getConf("fe-location", "locationMinCharLookup", 2)
+      safeSearchString.length >= modulesManager.getConf("fe-location", "locationMinCharLookup", 2)
     ) {
       if (parentLocations) {
-        dispatch(fetchParentLocationsStr(modulesManager, locationLevel, parentLocations, searchString, 20));
+        dispatch(fetchParentLocationsStr(modulesManager, locationLevel, parentLocations, safeSearchString, 20));
       } else {
         dispatch(fetchLocationsStr(
           modulesManager,
@@ -75,7 +77,7 @@ const LocationPicker = (props) => {
           regions?.[0]?.uuid,
           districts?.[0]?.uuid,
           parentLocation,
-          searchString,
+          safeSearchString,
         ));
       }
     }
@@ -102,6 +104,8 @@ const LocationPicker = (props) => {
     setResetKey(Date.now());
   }, [value]);
 
+  const normalizedValue = multiple ? (Array.isArray(value) ? value : []) : (value ?? null);
+
   return (
     <Autocomplete
       key={resetKey}
@@ -118,13 +122,13 @@ const LocationPicker = (props) => {
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
       autoComplete
-      value={value}
+      value={normalizedValue}
       getOptionLabel={(option) => locationLabel(option)}
-      getOptionSelected={(option, value) => option.id === value.id}
+      getOptionSelected={(option, value) => option?.id === value?.id}
       onChange={handleChange}
       filterOptions={filterOptions}
       filterSelectedOptions={filterSelectedOptions}
-      onInputChange={(__, searchString) => onInputChange(searchString)}
+      onInputChange={(__, searchString) => onInputChange(searchString ?? "")}
       renderInput={(inputProps) => (
         <TextField
           {...inputProps}
