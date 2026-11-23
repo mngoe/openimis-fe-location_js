@@ -1,5 +1,5 @@
 import { healthFacilityLabel, LOCATION_SUMMARY_PROJECTION } from "../utils";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useModulesManager, useTranslations, Autocomplete, useGraphqlQuery } from "@openimis/fe-core";
 import _debounce from "lodash/debounce";
@@ -27,8 +27,10 @@ const HealthFacilityPicker = (props) => {
   const modulesManager = useModulesManager();
   const { formatMessage } = useTranslations("location", modulesManager);
   const [searchString, setSearchString] = useState("");
+  const lastAutoFillKeyRef = useRef(null);
   let pickedDistrictsUuids = [];
   Array.isArray(district) ? pickedDistrictsUuids = district?.map((district) => district?.uuid) : pickedDistrictsUuids.push(district?.uuid);
+  const districtSignature = pickedDistrictsUuids.filter(Boolean).sort().join(",");
   const { data, isLoading, error } = useGraphqlQuery(
     `
     query HealthFacilityPicker ($str: String, $region: String, $district: [String], $level: String) {
@@ -52,11 +54,50 @@ const HealthFacilityPicker = (props) => {
     { skip: true },
   );
 
+  const haveSameHealthFacilities = (left = [], right = []) => {
+    if (left.length !== right.length) return false;
+    const leftIds = left.map((hf) => hf?.uuid ?? hf?.id).filter(Boolean).sort();
+    const rightIds = right.map((hf) => hf?.uuid ?? hf?.id).filter(Boolean).sort();
+    return leftIds.every((id, idx) => id === rightIds[idx]);
+  };
+
   useEffect(() => {
-    if (multiple && autoComplete && !!district && data?.healthFacilities?.edges) {
-      onDataChange?.(value?.length > 0 ? value : data.healthFacilities.edges.map((edge) => edge.node));
+    if (!(multiple && autoComplete && !!district && data?.healthFacilities?.edges)) return;
+
+    const fetchedFacilities = data.healthFacilities.edges.map((edge) => edge.node);
+    const fetchedSignature = fetchedFacilities
+      .map((hf) => hf?.uuid ?? hf?.id)
+      .filter(Boolean)
+      .sort()
+      .join(",");
+    const autoFillKey = `${districtSignature}|${fetchedSignature}`;
+
+    if (lastAutoFillKeyRef.current === autoFillKey) return;
+    lastAutoFillKeyRef.current = autoFillKey;
+
+    const pickedDistrictUuids = new Set(
+      (Array.isArray(district) ? district : [district])
+        .filter(Boolean)
+        .map((d) => d?.uuid),
+    );
+
+    const currentSelection = Array.isArray(value) ? value : [];
+    const filteredCurrentSelection = currentSelection.filter((hf) =>
+      pickedDistrictUuids.has(hf?.location?.uuid),
+    );
+
+    const mergedByUuid = new Map();
+    [...filteredCurrentSelection, ...fetchedFacilities].forEach((hf) => {
+      const key = hf?.uuid ?? hf?.id;
+      if (key) mergedByUuid.set(key, hf);
+    });
+
+    const mergedFacilities = Array.from(mergedByUuid.values());
+
+    if (!haveSameHealthFacilities(currentSelection, mergedFacilities)) {
+      onDataChange?.(mergedFacilities);
     }
-  }, [data]);
+  }, [data, district, districtSignature, multiple, autoComplete, value, onDataChange]);
 
   return (
     <Autocomplete
